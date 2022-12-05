@@ -7,3 +7,32 @@ a{
     text-decoration: none;
     color: inherit;
 }
+.grid{
+    
+    grid-template-columns: auto auto auto auto;
+    display: grid;
+    column-gap: 20px;
+    row-gap: 20px;
+}
+.grid-item{
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 3px 6px 10px;
+    padding: 0px 0px 8px 0px;
+
+}
+.grid-item img{
+    width: 100%;
+    border-radius: 8px 8px 0px 0px;
+}
+.grid-item p{
+    padding: 4px 0;
+}
+.grid-item button{
+ background-color: rgb(102, 92, 171);
+ color: rgb(255, 255, 255);
+ border: none;
+ padding: 5px 12px;
+ border-radius: 7px;
+}

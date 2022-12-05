@@ -7,10 +7,14 @@ function HomePage({character}) {
         <Search/>
         <h1>Main Characters</h1>
         <div className='characters-container'>
-          <div>
+          <div className='grid'>
             {
              character.map((item)=>{
-              return <p>{item.name}</p>
+              return <div className='grid-item'>
+                <img src={item.image}/>
+                <p>{item.name}</p>
+                <button>see details</button>
+                </div>
              })
             }
             
