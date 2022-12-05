@@ -10,7 +10,7 @@ function HomePage({character}) {
           <div>
             {
              character.map((item)=>{
-              return <p>{item.character}</p>
+              return <p>{item.name}</p>
              })
             }
             
