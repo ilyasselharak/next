@@ -3,6 +3,9 @@
     margin: 0;
     box-sizing: border-box;
 }
+.home{
+    text-align: center;
+}
 a{
     text-decoration: none;
     color: inherit;
@@ -15,7 +18,6 @@ a{
     row-gap: 20px;
 }
 .grid-item{
-    text-align: center;
     border: none;
     border-radius: 8px;
     box-shadow: 3px 6px 10px;

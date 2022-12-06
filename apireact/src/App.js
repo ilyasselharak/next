@@ -4,6 +4,7 @@ import Header from './components/Header';
 import About from './components/About';
 import {BrowserRouter,Routes,Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
+import Detail from './components/Detail';
 import axios from 'axios';
 
 function App() {
@@ -12,7 +13,6 @@ function App() {
   useEffect(()=>{
     axios.get(`https://rickandmortyapi.com/api/character`)
 .then(response=>{
-  console.log(response.data.results)
   setcharacter(response.data.results)
 
 })
@@ -25,6 +25,7 @@ function App() {
       <Routes>
         <Route element={<About/>} path='/about'/>
         <Route path="/" element={<HomePage character={character}/>}/>
+        <Route path="/detail/:characterId" element={<Detail/>}/>
       </Routes>
 
     </BrowserRouter>
