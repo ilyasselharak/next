@@ -10,8 +10,6 @@ function checkout() {
     label='pay to get iptv'
     email='ilyasselharak@gmail.com'
     description='your payment will be 200$'/>
-
-
     </>
   )
 }

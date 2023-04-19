@@ -5,9 +5,9 @@ import Link from 'next/link'
 
 const Footer = () => {
   return (
-    <div className='bg-black w-full h-vh relative '>
+    <div className='bg-black w-full h-vh relative bg-black border-t border-gray-500'>
         
-        <Image src="/bg.png" width={70} height={300} className='h-[100%] w-full absolute mix-blend-screen'/>
+        
         <div className=' grid px-8 py-4 gap-3 xl:grid-cols-4 sm:grid-cols-2 justify-around text-white'>
         
             <div>
