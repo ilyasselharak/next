@@ -123,7 +123,7 @@ export default function Home() {
       <div className="text-red-700 text-center text-6xl py-6">Overall Features</div>
       <span className="inline">Our revolutionary Cloud solution is powerful, simple, and surprisingly affordable.</span>
       </div>
-      <div className="grid md:grid-cols-2 py-4 gap-2 gap-x-4 md:px-96">
+      <div className="grid md:grid-cols-2 py-4 gap-2 gap-x-4 md:px-52 sm:px-48 xl:px-72 2xl:px-80 lg:px-64 px-32">
         <div>
           <BsFillCloudDownloadFill className="mx-auto my-0" size={50} color="gold"/>
           <h2>Auto Update</h2>
@@ -197,7 +197,7 @@ export default function Home() {
       <Package month={"12 Months"} lastPrice={"59.99€ "} price={"49.99€"} url={"product/OneMonth"}/>
     </div>
     
-    <div className="grid my-12 md:grid-cols-2 gap-x-6 grid-cols-1 md:px-60 sm:px-48 xl:px-72 2xl:px-80 lg:px-64 px-32">
+    <div className="grid my-12 md:grid-cols-2 gap-x-6 grid-cols-1 md:px-52 sm:px-48 xl:px-72 2xl:px-80 lg:px-64 px-32">
       <div className="flex flex-col gap-4 mb-12">
         
         <div className="text-red-700 text-4xl py-8">
