@@ -42,7 +42,7 @@ export default function Home() {
   return (
     <>
     <Header />
-    <div className="top-20 sm:w-[3px] xl:w-full md:w-full 2xl:w-ful lg:w-full w-[600px] xl:top- right-0 relative">
+    <div className="top-20 sm:w-[730px] xl:w-full md:w-full 2xl:w-ful lg:w-full w-[600px] xl:top- right-0 relative">
     <Swiper style={{"z-index": "0"}}
     autoplay={{
       delay: 6000,
