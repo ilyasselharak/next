@@ -42,7 +42,7 @@ export default function Home() {
   return (
     <>
     <Header />
-    <div className="top-20 relative">
+    <div className="top-20 sm:w-[3px] xl:w-full md:w-full 2xl:w-ful lg:w-full w-[600px] xl:top- right-0 relative">
     <Swiper style={{"z-index": "0"}}
     autoplay={{
       delay: 6000,
@@ -94,7 +94,7 @@ export default function Home() {
     <div className=" text-center text-xl pt-2">One of The best subscriptions service with more up to 19999 channels and more than 99999 Movies and tv shows.</div>
     <div className=" text-center text-xl pt-2">When you use our IPTV server You will be able to watch TV channels, movies, TV shows, sports, and documentaries from all over the world, shop IPTV now, and enjoy with our server.</div>
     </div>
-    <div className=" grid justify-around gap-3 text-lg text-center xl:grid-cols-3 sm:grid-cols-2 px-72 py-16">
+    <div className=" grid justify-around gap-3 text-lg text-center xl:grid-cols-3 sm:grid-cols-2 xl:px-72 sm:32 py-16">
       <div className="flex flex-col items-center justify-center">
       <Image className="rounded-md wx-auto my-6" src="/movie.jpg" width={200} height={130}/>
       <div>
