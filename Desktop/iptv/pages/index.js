@@ -197,8 +197,8 @@ export default function Home() {
       <Package month={"12 Months"} lastPrice={"59.99€ "} price={"49.99€"} url={"product/OneMonth"}/>
     </div>
     
-    <div className="grid my-12 md:grid-cols-2 gap-x-6 grid-cols-1 md:px-64">
-      <div className="flex flex-col gap-4 ">
+    <div className="grid my-12 md:grid-cols-2 gap-x-6 grid-cols-1 md:px-60 sm:px-48 xl:px-72 2xl:px-80 lg:px-64 px-32">
+      <div className="flex flex-col gap-4 mb-12">
         
         <div className="text-red-700 text-4xl py-8">
           <span>OUR EXPERIENCE</span>
