@@ -9,7 +9,7 @@ FaShoppingCart
 const Header = ({msg}) => {
   const [open ,setOpen]= useState(false)
   if (typeof window !== 'undefined') {
-    var item = sessionStorage.getItem('price') 
+    var item = localStorage.getItem('price') 
   }
   return (
     <div className='top-0 left-0 z-[1] fixed w-full'>

@@ -50,10 +50,10 @@ const Cart = () => {
                   <label>Credit Card:</label>
                   <StripeCheckout
                     stripeKey='pk_test_51My7qwBPMltpexmsXF53SsaOf3jnvJhHRwaqqfPbY2hU0NmAw1rg3OefRoRevGMBGCEYxdvrqyn46fFAntv7aSkV00FBjHG8Ah'
-                     amount={sessionStorage.getItem("price")}
+                     amount={localStorage.getItem("price")}
                      label='pay'
                      email={session.user.email}
-                    description={`your payment will be ${sessionStorage.getItem("price")}`}/>
+                    description={`your payment will be ${localStorage.getItem("price")}`}/>
                </div>
                <div className="flex gap-4 items-center">
             <PayPalScriptProvider>
@@ -67,7 +67,7 @@ const Cart = () => {
                   purchase_units: [
                     {
                       amount:{
-                        value:sessionStorage.getItem("price")
+                        value:localStorage.getItem("price")
                     },
                   }
                   ]

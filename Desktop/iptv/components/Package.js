@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 
 const Package = ({msg,lastPrice,price, month}) => {
   const fun=()=>{
-    sessionStorage.setItem("price",price);
-    sessionStorage.setItem("month",month);
+    localStorage.setItem("price",price);
+    localStorage.setItem("month",month);
     msg()
   }
   return (
