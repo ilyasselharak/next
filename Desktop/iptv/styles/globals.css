@@ -4,7 +4,7 @@
 
 
 li{
-    @apply text-red-600 text-lg relative
+    @apply  text-lg relative
 }
 a:hover{
     @apply text-white border-b border-red-300 text-xl
@@ -17,4 +17,7 @@ a:hover{
 }
 .bg3{
     background-image: url('/bg3.jpg');
+}
+input{
+    @apply border border-black rounded-md p-2  w-full
 }

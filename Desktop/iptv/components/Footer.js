@@ -22,9 +22,9 @@ const Footer = () => {
             </div>
             <div className='text-center flex flex-col gap-1'>
                 <h1 className='text-2xl pb-2'>LINKS</h1>
-                <p><Link href={'/'} >HOME</Link></p>
+                <p><Link href={'#price'} >Pricing</Link></p>
         <p><Link href={'/blog'}>BLOG</Link></p>
-        <p><Link href={'/about'}>ABOUT</Link></p>
+        <p><Link href={'#about'}>ABOUT</Link></p>
         <p><Link href={'/contact'}>CONTACTUS</Link></p>
         <p><Link href={'/business'}>BUSINESS</Link></p>
         <p><Link href={'/business'}>CART</Link></p>
@@ -32,8 +32,8 @@ const Footer = () => {
             <div className='text-center flex flex-col gap-1'>
                 <h1 className='text-2xl pb-2'>Packages</h1>
                 <p><Link href={'/'} >1 Month </Link></p>
-        <p><Link href={'/pricing'}>3 Month</Link></p>
-        <p><Link href={'/blog'}>6 Month</Link></p>
+        <p><Link href={'#price'}>3 Month</Link></p>
+        <p><Link href={'#price'}>6 Month</Link></p>
         <p><Link href={'/about'}>12 Month</Link></p>
             </div>
             <div className='text-center'>

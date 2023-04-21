@@ -1,11 +1,16 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 
-const Package = ({url,lastPrice,price, month}) => {
+const Package = ({msg,lastPrice,price, month}) => {
+  const fun=()=>{
+    sessionStorage.setItem("price",price);
+    sessionStorage.setItem("month",month);
+    msg()
+  }
   return (
     <div>
         <div className="bg-red-800 text-white text-center rounded-lg py-2 pb-4">
-        <div className=" border-b-2 py-1 border-red-200"><h1 className='text-2xl'>{month}</h1>
+        <div className=" border-b-2 py-1 border-red-200"><h1 className='text-2xl'>{month} Months</h1>
         <p>Sports, News, Series, Movies, Cartons</p>
         </div>
         
@@ -23,7 +28,7 @@ const Package = ({url,lastPrice,price, month}) => {
         <p>100% Stable Server</p>
         <p>Fast Delivery</p>
         </div>
-        <Link href={url} className="bg-blue-900 text-white p-2 rounded-md">Buy Now</Link>
+        <button onClick={fun} className="bg-blue-900 text-white p-2 rounded-md">Buy Now</button>
 
       </div>
     </div>
