@@ -5,6 +5,8 @@ import {useSession} from "next-auth/react";
 import StripeCheckout from 'react-stripe-checkout'
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useState } from "react";
+import {AiOutlineClose} from "react-icons/ai"
+
 
 
 const dat = [ 
@@ -261,6 +263,8 @@ const Pay = ({msg}) => {
   const [skiped,setSkiped]=useState(false)
     const {data: session} = useSession()
     const [payWay,setPayWay]=useState("card")
+    const [month,setMonth]=useState('')
+    const [prices,setPrices]=useState("")
     if(session){
         
         return (
@@ -306,7 +310,7 @@ const Pay = ({msg}) => {
                         <option value={"paypal"}>paypal</option>
                         <option disabled>Crypto currency</option>
                         <option disabled>Transfer bank not available now</option>
-                        {console.log(payWay)}
+                      
                       </select>
                      </div>
                   </div>
@@ -352,18 +356,42 @@ const Pay = ({msg}) => {
             </>
         )
     }else if(skiped){
+      function price(i){
+        setMonth(i)
+        switch(i){
+          case "1":
+            localStorage.setItem("price", "10.99")
+            setPrices(10.99)
+            break;
+          case "3":
+            localStorage.setItem("price", "19.99")
+            setPrices(19.99)
+            break;
+          case "6":
+            localStorage.setItem("price", "34.99")
+            setPrices(34.99)
+            break;
+          case "12":
+            localStorage.setItem("price", "49.99")
+            setPrices(49.99)
+            break;
+        }
+        
+      }
       return(
       <>
       
-      <div className="grid grid-cols-2">
-            <div>
+      <div className="grid grid-cols-2 relative">
+
+        <div className="absolute right-2 top-2" ><AiOutlineClose className="hover:text-red-700" onClick={()=>{msg();setPrices("");setMonth("")}}/></div>
+            <div className="ml-4 mt-2">
                <div className="flex flex-col gap-2 mt-2 w-full">
                  <h1>Customer information</h1>
-                 <input type="email" placeholder="enter your email"/>
+                 <input type="email" placeholder="Email"/>
                   <h2>Billing details</h2>
                   <div className="flex flex-col gap-3">
                      <div>
-                       <input placeholder="enter your name" type="text"/>
+                       <input placeholder="Full Name" type="text"/>
                       </div>
                       <select className="border border-black rounded-md p-2 ml-2">
                         {
@@ -372,20 +400,43 @@ const Pay = ({msg}) => {
                            })
                        }
                      </select>
+                     <div>
+                      <input placeholder="ADDRESS"  type="text"/>
+                   </div>
+                   
                     <div>
-                       <input placeholder="Tel:+---_---_--"  type="tel"/>
+                       <input placeholder="Tel:+---_---_-- *"  type="tel"/>
+                     </div>
+                     <div>
+                      <select onChange={(e)=>{setPayWay(e.target.value)}} value={payWay}>
+                        <option value={"card"}>Credit Card</option>
+                        <option value={"paypal"}>paypal</option>
+                        <option disabled>Crypto currency</option>
+                        <option disabled>Transfer bank not available now</option>
+                        
+                      </select>
                      </div>
                   </div>
               </div>
             </div>
-            <div className="m-auto flex flex-col gap-4">
-               <div className="flex gap-4 items-center">
+            <div className="m-auto flex flex-col items-center gap-4">
+              <div>
+                <select onChange={(e)=>{price(e.target.value)}} value={month}>
+                  <option disabled>{localStorage.getItem("month")} Months</option>
+                  <option value={"1"}>1 Month</option>
+                  <option value={"3"}>3 months</option>
+                  <option value={"6"}>6 months</option>
+                  <option value={"12"}>12 months</option>
+                </select>
+            <div>You Will Pay :{prices!==""?prices:localStorage.getItem("price")}€ for {month!==""?month:localStorage.getItem("month")} Months </div>
+            </div>
+               <div className={`flex gap-4 items-center ${payWay==="card"? "":"hidden"}`}>
                   <label>Credit Card:</label>
-                  <StripeCheckout
+                  <StripeCheckout 
                     stripeKey='pk_test_51My7qwBPMltpexmsXF53SsaOf3jnvJhHRwaqqfPbY2hU0NmAw1rg3OefRoRevGMBGCEYxdvrqyn46fFAntv7aSkV00FBjHG8Ah'
-                     amount={localStorage.getItem("price")}
+                     amount={prices!==""?prices*100:localStorage.getItem("price")*100}
                      label='pay'
-                     email="ilyasselharak@gmail.com"
+                     email="ilyaselharak@gmail.com"
                     description={`your payment will be ${localStorage.getItem("price")}`}/>
                </div>
                <div className="flex gap-4 items-center">
@@ -395,16 +446,19 @@ const Pay = ({msg}) => {
                 layout: "horizontal",
                 shape:"pill"
               }}
+              className={payWay==="paypal"? "":"hidden"}
               createOrder={(data,actions)=>{
-                return actions.order.create({
-                  purchase_units: [
-                    {
-                      amount:{
-                        value:localStorage.getItem("price")
-                    },
-                  }
-                  ]
-                })
+                  return actions.order.create({
+                    purchase_units: [
+                      {
+                        amount:{
+                          value:localStorage.getItem("price")
+                      },
+                    }
+                    ]
+                  })
+                
+                
               }}
               ></PayPalButtons>
             </PayPalScriptProvider>
