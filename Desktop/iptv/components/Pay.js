@@ -2,10 +2,16 @@ import { FcGoogle } from "react-icons/fc";
 import { BsFillSkipEndCircleFill } from "react-icons/bs";
 import { signIn, signOut } from "next-auth/react"
 import {useSession} from "next-auth/react";
-import StripeCheckout from 'react-stripe-checkout'
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useState } from "react";
 import {AiOutlineClose} from "react-icons/ai"
+import Link from 'next/link'
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "@/firebaseConfig";
+import StripeCheckout from "react-stripe-checkout";
+
+
+
 
 
 
@@ -256,39 +262,37 @@ const dat = [
   ]
 
 const Pay = ({msg}) => {
-  const fun=()=>{
-    localStorage.clear();
-    msg()
-  }
+  
+
   const [skiped,setSkiped]=useState(false)
     const {data: session} = useSession()
+    const [email,setEmail] = useState('')
     const [payWay,setPayWay]=useState("card")
     const [month,setMonth]=useState('')
     const [prices,setPrices]=useState("")
     if(session){
         
         return (
-            <>
+            <><div className="relative">
             <div className="ml-4 mt-2">
+        <div className="absolute right-2 top-2 text-xl" ><AiOutlineClose className="hover:text-red-700" onClick={()=>{msg();setPrices("");setMonth("")}}/></div>
+
             <div className="flex items-center justify-between w-[80%] mx-auto">
               <div className="flex items-center gap-2">
                 <img src={session.user.image} width={60} className="rounded-full" alt={session.user.name}/>
                 <span>{session.user.name}</span>
-                <button onClick={()=>signOut()}>signOut</button>
-              </div>
-              <div className="text-blue-700">
-                <button onClick={fun}>Select another package</button>
+                <button className="text-red-700" onClick={()=>signOut()}>signOut</button>
               </div>
             </div>
             <div className="grid grid-cols-2">
             <div>
                <div className="flex flex-col gap-2 mt-2 w-full">
                  <h1>Customer information</h1>
-                 <input placeholder="Email *" type="email" value={session.user.email}/>
+                 <input disabled onChange={(e)=>{setEmail(e.target.value)}} placeholder="Email *" type="email" value={session.user.email}/>
                   <h2>Billing details</h2>
                   <div className="flex flex-col gap-3">
                      <div>
-                       <input placeholder="Full Name *" value={session.user.name} type="text"/>
+                       <input disabled placeholder="Full Name *" value={session.user.name} type="text"/>
                       </div>
                       <select className="border border-black rounded-md p-2 ml-2">
                         {
@@ -301,33 +305,49 @@ const Pay = ({msg}) => {
                       <input placeholder="ADDRESS"  type="text"/>
                    </div>
                    
-                    <div>
+                   <div>
                        <input placeholder="Tel:+---_---_-- *"  type="tel"/>
                      </div>
                      <div>
-                      <select onChange={(e)=>{setPayWay(e.target.value)}} value={payWay}>
+                      <select  onChange={(e)=>{setPayWay(e.target.value)}} value={payWay}>
                         <option value={"card"}>Credit Card</option>
                         <option value={"paypal"}>paypal</option>
                         <option disabled>Crypto currency</option>
                         <option disabled>Transfer bank not available now</option>
-                      
+                        
                       </select>
                      </div>
                   </div>
               </div>
             </div>
             <div className="m-auto flex flex-col items-center gap-4">
-              <div>You Will Pay :{localStorage.getItem("price")}€ for {localStorage.getItem("month")} Months</div>
-               <div className={`flex gap-4 items-center ${payWay==="card"? "":"hidden"}`}>
-                  <label>Credit Card:</label>
-                  <StripeCheckout 
-                    stripeKey='pk_test_51My7qwBPMltpexmsXF53SsaOf3jnvJhHRwaqqfPbY2hU0NmAw1rg3OefRoRevGMBGCEYxdvrqyn46fFAntv7aSkV00FBjHG8Ah'
-                     amount={localStorage.getItem("price")*100}
-                     label='pay'
+              <div className="flex-col flex gap-3">
+                
+                <div className="flex-col flex gap-1 items-center sm:flex sm:flex-row">
+                <select className="sm:w-[45%] w-full" onChange={(e)=>{price(e.target.value)}} value={month}>
+                  
+                  <option selected hidden>{localStorage.getItem("month")} Months</option>
+                  <option value={"1"}>1 Month</option>
+                  <option value={"3"}>3 months</option>
+                  <option value={"6"}>6 months</option>
+                  <option value={"12"}>12 months</option>
+                </select>
+                <div className="text-red-700"><button onClick={()=>{msg();localStorage.clear();setPrices('');setMonth('')}}>Remove From Cart</button></div>
+                </div>
+            <div className="flex-col flex gap-1 items-center sm:flex sm:flex-row"><div>Your Package: </div>{prices!==""?prices:localStorage.getItem("price")}€ for {month!==""?month:localStorage.getItem("month")} Months </div>
+            </div>
+               
+                  
+                  
+                  <div className={`flex gap-4 items-center ${payWay==="card"? "":"hidden"}`}> <label>Credit Card:</label>
+                   <StripeCheckout
+                    stripeKey={process.env.STRIPE_KEY}
+                     amount={prices!==""?prices*100:localStorage.getItem("price")*100}
+                     label='Pay'
                      email={session.user.email}
-                    description={`your payment will be ${localStorage.getItem("price")}`}/>
-               </div>
-               <div className="flex gap-4 items-center">
+                    description={`Pay ${localStorage.getItem("price")} for ${localStorage.getItem("month")} Months`}/> 
+                    </div>
+                    <div className="flex gap-4 items-center">
             <PayPalScriptProvider>
               <PayPalButtons style={{
                 color: "silver",
@@ -336,23 +356,28 @@ const Pay = ({msg}) => {
               }}
               className={payWay==="paypal"? "":"hidden"}
               createOrder={(data,actions)=>{
-                return actions.order.create({
-                  purchase_units: [
-                    {
-                      amount:{
-                        value:localStorage.getItem("price")
-                    },
-                  }
-                  ]
-                })
+                  return actions.order.create({
+                    purchase_units: [
+                      {
+                        amount:{
+                          value:localStorage.getItem("price")
+                      },
+                    }
+                    ]
+                  })
+                
+                
               }}
               ></PayPalButtons>
             </PayPalScriptProvider>
                </div>
+                  
+               
+               
             </div>
             </div>
             </div>
-            
+            </div>
             </>
         )
     }else if(skiped){
@@ -361,17 +386,23 @@ const Pay = ({msg}) => {
         switch(i){
           case "1":
             localStorage.setItem("price", "10.99")
+            localStorage.setItem("month", 1)
             setPrices(10.99)
             break;
           case "3":
+            localStorage.setItem("month", 3)
             localStorage.setItem("price", "19.99")
             setPrices(19.99)
             break;
           case "6":
+            localStorage.setItem("month", 6)
+
             localStorage.setItem("price", "34.99")
             setPrices(34.99)
             break;
           case "12":
+            localStorage.setItem("month", 12)
+
             localStorage.setItem("price", "49.99")
             setPrices(49.99)
             break;
@@ -385,13 +416,14 @@ const Pay = ({msg}) => {
 
         <div className="absolute right-2 top-2" ><AiOutlineClose className="hover:text-red-700" onClick={()=>{msg();setPrices("");setMonth("")}}/></div>
             <div className="ml-4 mt-2">
+              <div className="text-blue-700"><button onClick={()=>signIn()}>continue with google</button></div>
                <div className="flex flex-col gap-2 mt-2 w-full">
                  <h1>Customer information</h1>
-                 <input type="email" placeholder="Email"/>
+                 <input onChange={(e)=>{setEmail(e.target.value);localStorage.setItem("name",e.target.value)}} type="email" placeholder="Email *"/>
                   <h2>Billing details</h2>
                   <div className="flex flex-col gap-3">
                      <div>
-                       <input placeholder="Full Name" type="text"/>
+                       <input onChange={(e)=>{localStorage.setItem("name",e.target.value)}} placeholder="Full Name *" type="text"/>
                       </div>
                       <select className="border border-black rounded-md p-2 ml-2">
                         {
@@ -420,26 +452,36 @@ const Pay = ({msg}) => {
               </div>
             </div>
             <div className="m-auto flex flex-col items-center gap-4">
-              <div>
-                <select onChange={(e)=>{price(e.target.value)}} value={month}>
-                  <option disabled>{localStorage.getItem("month")} Months</option>
+            <div className="flex-col flex gap-3">
+                
+                <div className="flex-col flex gap-1 items-center sm:flex sm:flex-row">
+                <select className="sm:w-[45%] w-full" onChange={(e)=>{price(e.target.value)}} value={month}>
+                  
+                  <option selected hidden>{localStorage.getItem("month")} Months</option>
                   <option value={"1"}>1 Month</option>
                   <option value={"3"}>3 months</option>
                   <option value={"6"}>6 months</option>
                   <option value={"12"}>12 months</option>
                 </select>
-            <div>You Will Pay :{prices!==""?prices:localStorage.getItem("price")}€ for {month!==""?month:localStorage.getItem("month")} Months </div>
+                <div className="text-red-700"><button onClick={()=>{msg();localStorage.clear();setPrices('');setMonth('')}}>Remove From Cart</button></div>
+                </div>
+            <div className="flex-col flex gap-1 items-center sm:flex sm:flex-row"><div>Your Package: </div>{prices!==""?prices:localStorage.getItem("price")}€ for {month!==""?month:localStorage.getItem("month")} Months </div>
             </div>
-               <div className={`flex gap-4 items-center ${payWay==="card"? "":"hidden"}`}>
-                  <label>Credit Card:</label>
-                  <StripeCheckout 
-                    stripeKey='pk_test_51My7qwBPMltpexmsXF53SsaOf3jnvJhHRwaqqfPbY2hU0NmAw1rg3OefRoRevGMBGCEYxdvrqyn46fFAntv7aSkV00FBjHG8Ah'
+               
+                  
+                  {(email.includes("@") === true && email.includes(".")===true) === true && 
+                  (
+                  <> 
+                  <div className={`w-full ${payWay==="card"? "":"hidden"}`}> <label>Credit Card:</label>
+                  
+                   <StripeCheckout 
+                    stripeKey={process.env.STRIPE_KEY}
                      amount={prices!==""?prices*100:localStorage.getItem("price")*100}
                      label='pay'
-                     email="ilyaselharak@gmail.com"
-                    description={`your payment will be ${localStorage.getItem("price")}`}/>
-               </div>
-               <div className="flex gap-4 items-center">
+                     email={email}
+                    description={`Pay ${localStorage.getItem("price")} for ${localStorage.getItem("month")} Months`}/> 
+                    </div>
+                    <div className="flex gap-4 items-center">
             <PayPalScriptProvider>
               <PayPalButtons style={{
                 color: "silver",
@@ -463,6 +505,11 @@ const Pay = ({msg}) => {
               ></PayPalButtons>
             </PayPalScriptProvider>
                </div>
+                    </>
+                    )}
+                  
+               
+               
             </div>
             </div>
             
@@ -478,11 +525,12 @@ const Pay = ({msg}) => {
             Sign in with Google
           </span>
         </div>
-        <div className="item-center gap-10 cursor-pointer hover:border-blue-600 flex items-center justify-center border-[1px] border-gray-400 tracking-wide h-12 w-60 text-base rounded-md">
+        <div onClick={()=>{ setSkiped(true)}} className="item-center gap-10 cursor-pointer hover:border-blue-600 flex items-center justify-center border-[1px] border-gray-400 tracking-wide h-12 w-60 text-base rounded-md">
           <BsFillSkipEndCircleFill />
-          <button onClick={()=>{ setSkiped(true)}} className="text-sm text-gray-900">Buy Without Login</button>
+          <button className="text-sm text-gray-900">Buy Without Login</button>
         </div>
       </div>
+      
     </>
   )}
   ;

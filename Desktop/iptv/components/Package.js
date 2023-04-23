@@ -1,5 +1,3 @@
-import Link from 'next/link'
-import React, { useState } from 'react'
 
 const Package = ({msg,lastPrice,price, month}) => {
   const fun=()=>{

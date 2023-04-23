@@ -14,7 +14,9 @@ import Pay from "@/components/Pay";
 
 
 export default function Home() {
-  
+
+
+
   const [num, setNum] = useState(0);
   const [pay,setPay] = useState(false)
 
@@ -101,6 +103,7 @@ export default function Home() {
     </Swiper>
     
     <div className="text-red-700 text-center text-6xl py-6">Why Subscribe to Our Service</div>
+    
     <div className="px-4">
     <div className=" text-center text-xl pt-2">One of The best subscriptions service with more up to 19999 channels and more than 99999 Movies and tv shows.</div>
     <div className=" text-center text-xl pt-2">When you use our IPTV server You will be able to watch TV channels, movies, TV shows, sports, and documentaries from all over the world, shop IPTV now, and enjoy with our server.</div>
