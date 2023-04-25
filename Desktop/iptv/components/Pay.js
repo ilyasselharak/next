@@ -341,7 +341,7 @@ const Pay = ({msg}) => {
                   
                   <div className={`flex gap-4 items-center ${payWay==="card"? "":"hidden"}`}> <label>Credit Card:</label>
                    <StripeCheckout
-                    stripeKey={process.env.STRIPE_KEY}
+                    
                      amount={prices!==""?prices*100:localStorage.getItem("price")*100}
                      label='Pay'
                      email={session.user.email}
@@ -472,13 +472,13 @@ const Pay = ({msg}) => {
                   {(email.includes("@") === true && email.includes(".")===true) === true && 
                   (
                   <> 
-                  <div className={`w-full ${payWay==="card"? "":"hidden"}`}> <label>Credit Card:</label>
+                  <div className={`w-full ${payWay==="card"? "":"hidden"}`}> <label> Credit Card:</label>
                   
-                   <StripeCheckout 
+                  <StripeCheckout
                     stripeKey={process.env.STRIPE_KEY}
                      amount={prices!==""?prices*100:localStorage.getItem("price")*100}
-                     label='pay'
-                     email={email}
+                     label='Pay'
+                     email={session.user.email}
                     description={`Pay ${localStorage.getItem("price")} for ${localStorage.getItem("month")} Months`}/> 
                     </div>
                     <div className="flex gap-4 items-center">
